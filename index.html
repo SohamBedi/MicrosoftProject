@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Demo</title>
+    <link href="//fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="1.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script>$(document).ready(function () {
+        $("#translateButton").click(function () {
+            translatePage();
+        });
+    });
+    
+    function translatePage() {
+        const subscriptionKey = 'ebb0acd166b34bbe86a455e1ba030b30';
+        const region = 'centralindia';
+        const url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=de`;
+        const headers = {
+            'Ocp-Apim-Subscription-Key': subscriptionKey,
+            'Ocp-Apim-Subscription-Region': region,
+            'Content-type': 'application/json',
+            'X-ClientTraceId': new Date().getTime(),
+        };
+    
+        const elementsToTranslate = $('.translate-text');
+        const totalElements = elementsToTranslate.length;
+        let elementsProcessed = 0;
+    
+        elementsToTranslate.each(function () {
+            const originalElement = $(this);
+    
+            // Check if the element is an image, link, or excluded structural element
+            if (originalElement.is('img') || originalElement.is('link') || originalElement.is('header') || originalElement.is('footer')) {
+                elementsProcessed++;
+    
+                // If all elements have been processed, trigger any necessary post-translation actions
+                if (elementsProcessed === totalElements) {
+                    // Perform any necessary actions after all elements are translated
+                    reloadStyles(); // Reload styles after translation
+                }
+    
+                return;
+            }
+    
+            const originalHtml = originalElement.html();
+    
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: headers,
+                data: JSON.stringify([{ Text: originalHtml }]),
+                success: (data) => {
+                    const translatedText = data[0].translations[0].text;
+    
+                    // Create a temporary element to parse the translated content
+                    const tempElement = $('<div>').html(translatedText);
+    
+                    // Replace the content while preserving the original element type
+                    originalElement.replaceWith(tempElement.contents());
+    
+                    elementsProcessed++;
+    
+                    // If all elements have been processed, trigger any necessary post-translation actions
+                    if (elementsProcessed === totalElements) {
+                        // Perform any necessary actions after all elements are translated
+                        reloadStyles(); // Reload styles after translation
+                    }
+                },
+                error: (error) => {
+                    console.error('Translation error:', error);
+    
+                    elementsProcessed++;
+    
+                    // If all elements have been processed, trigger any necessary post-translation actions
+                    if (elementsProcessed === totalElements) {
+                        // Perform any necessary actions after all elements are translated
+                        reloadStyles(); // Reload styles after translation
+                    }
+                },
+            });
+        });
+    }
+    
+    // Add this function to reload styles after translation
+    function reloadStyles() {
+        // Get all stylesheets on the page
+        const stylesheets = document.styleSheets;
+    
+        // Iterate through stylesheets and reload them
+        for (let i = 0; i < stylesheets.length; i++) {
+            const stylesheet = stylesheets[i];
+            const href = stylesheet.href;
+    
+            if (href) {
+                // Create a new link element and set its href to force a reload
+                const newLink = document.createElement("link");
+                newLink.href = href + "?reload=" + new Date().getTime();
+                newLink.rel = "stylesheet";
+                newLink.type = "text/css";
+    
+                // Replace the old link with the new one
+                document.head.appendChild(newLink);
+                document.head.removeChild(newLink);
+            }
+        }
+    }
+    </script>
+    <style>
+        .navigate {
+    background: linear-gradient(to bottom, #007bff, #0056b3); 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+header {
+    background: linear-gradient(to bottom, #007bff, #0056b3);
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; 
+}
+
+.hotel a {
+    color: white;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.navigate .navbar {
+    text-align: right;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    margin-left: 20px; 
+}
+
+.navigate .navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px; 
+}
+
+.navigate .navbar a:hover {
+    background-color: white;
+    color: #4169E1;
+}
+
+.body {
+    background-color: aqua;
+}
+
+.services {
+    font-style: normal;
+    font-family: sans-serif;
+    display: block;
+    font-stretch: expanded;
+}
+
+.scroll-to {
+    cursor: pointer;
+}
+
+.resort-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #0072b4;
+}
+
+.home {
+    background-image: 
+    radial-gradient(at 30% 30%, hsla(46, 95%, 65%, 1) 0px, transparent 50%),
+    radial-gradient(at 70% 30%, hsla(168, 85%, 65%, 1) 0px, transparent 50%),
+    radial-gradient(at 30% 70%, hsla(290, 85%, 65%, 1) 0px, transparent 50%),
+    radial-gradient(at 70% 70%, hsla(12, 85%, 65%, 1) 0px, transparent 50%);
+}
+.ft{
+    
+    justify-content: space-between;
+    background-image: url('SL_111720_38050_100_19.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 100%;
+    color: #fff;
+    padding: 20px;
+    margin-top: 20px;
+}
+.footer {
+    display: flex;
+    justify-content: space-between;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 100%;
+    color: #fff;
+    padding: 20px;
+    margin-top: 20px;
+}
+.copywrite{
+    color:rgb(228, 214, 214);
+}
+
+.footer h3 {
+    font-size: 20px;
+}
+
+.footer_aboutUs,
+.footer_contactUs {
+    width: 50%;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+.footer a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    background-image: 
+    radial-gradient(at 30% 30%, rgb(81, 251, 104) 0px, transparent 50%),
+    radial-gradient(at 70% 30%, hsla(168, 85%, 65%, 1) 0px, transparent 50%),
+    radial-gradient(at 30% 70%, rgb(90, 151, 242) 0px, transparent 50%),
+    radial-gradient(at 70% 70%, rgb(214, 242, 90) 0px, transparent 50%);
+    text-decoration: underline;
+}
+
+.Auszeichnung {
+    max-width: 1010px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    
+}
+
+.Auszeichnungs {
+    display: flex;
+    align-items: center;
+    overflow-x: hidden;
+    
+}
+
+.scrolling-container {
+    display: flex;
+    white-space: nowrap;
+}
+
+.Auszeichnung1, .Auszeichnung2, .Auszeichnung3, .Auszeichnung4, .Auszeichnung5, .Auszeichnung6, .Auszeichnung7, .Auszeichnung8, .Auszeichnung9 {
+    display: inline-block;
+    margin-right: 20px;
+    max-width: 300px; 
+    overflow-wrap: break-word;
+    text-align: center;
+}
+
+button {
+    padding: 10px;
+    background-color: lightgray;
+    border: none;
+    cursor: pointer;
+}
+
+#scroll-left, #scroll-right {
+    margin: 0 10px;
+}
+.history{
+    display: flex;
+    justify-content: space-between;
+    
+}
+.history_img{
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+}
+.img1{
+    
+    justify-content: space-between;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.history_info{
+    background-color:white
+    
+}
+.history_intro{
+    background-color:white;
+    justify-content: space-between;
+    max-width: 1000px;
+    padding: 20px;
+    margin: 20px;
+    background-color:white;
+    margin-bottom: 20px;
+    align-self: center;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 10pxF;
+}
+.qualities {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.qualities li {
+    margin: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.qualities li::after {
+    content: attr(data-description);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: opacity 0.3s;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+
+.qualities li:hover::after {
+    opacity: 1;
+}
+
+.service-body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('luxurious-amenities.jpg');
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+}
+
+.services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.service-category {
+    flex: 1;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    text-align: justify;
+}
+
+.service-category ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.service-category li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.service-category li::before {
+    content: attr(data-description);
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: opacity 0.3s;
+    font-size: 1.2em;
+    white-space: nowrap;
+}
+
+.service-category li:hover::before {
+    opacity: 1;
+}
+
+
+.carousel-container {
+    overflow-x: scroll;
+    margin: auto;
+    border: 2px solid #ccc;
+    white-space: nowrap;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel-images {
+    display: inline-flex;
+    flex-direction: row;
+    scroll-snap-align: start;
+}
+
+.carousel-image {
+    width: 100%;
+    min-width: 300px; 
+}
+    </style>
+</head>
+
+
+<body style="background-color: rgb(253, 253, 222);" class="translate-text">
+    <link rel="stylesheet" href="1.css">
+    <p class="translate-text">
+    <header>
+        <div class="navigate">
+            <div class="hotel">
+                <a href="index.html" class="resort-name">The LakeFront</a>
+            </div>
+            <div class="navbar">
+                <a href="#contact">Contact</a>
+                <a href="#services">Services</a>
+                <a href="#history">About</a>
+                <a href="#Home">Home</a>
+                <a href="book.html" style="color:rgb(255, 249, 182);">Book Now</a>
+                <button id="translateButton" style="width: 110px; height: 20px; line-height: 1px; background-color: #4169E1; color: white; border: none; border-radius: 5px; cursor: pointer;">Translate Text</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="home" id="Home">
+        <p>
+            <center>
+                <h1>Welcome to LakeFront Udaipur: Royalty at its Finest</h1>
+            </center>
+
+        <ul class="qualities">
+            <li data-description="Luxurious Accommodations">Luxurious Rooms</li>
+            <li data-description="Exquisite Dining Options">Fine Dining</li>
+            <li data-description="Spectacular Lake Views">Lake View</li>
+            <li data-description="World-Class Spa">Relaxing Spa</li>
+            <li data-description="Impeccable Service">Exceptional Service</li>
+        </ul>
+        </p>
+        <div class="carousel-container">
+            <div class="carousel-images">
+                <img src="1 HERO Taj Lake Palace Udaipur 1.jpg" style="height: 20em;">
+                <img src="HD-wallpaper-udaipur-india-architecture-modern-udaipur-ancient-india-palace.jpg"
+                    style="height: 20em;">
+                <img src="17072008.jpg" style="height: 20em;">
+                <img src="udaipurtaj3.jpg" style="height: 20em;">
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="history_intro" id="history">
+
+        <p>
+        <h3>
+            <center>History of LakeFront</center>
+        </h3>
+        </p>
+
+        <div class="history">
+            <div class="history_info">
+                <p>Jag Niwas, constructed between 1743-1746 by Maharana Jagat Singh II, the 62nd custodian of House of
+                    Mewar, was used as a summer retreat by the Mewar Royal family over years until Maharana Bhagwat
+                    Singh, Mewar of Udaipur in 1963 converted it into a heritage hotel. A jewel floating in the middle
+                    of Lake Pichola,LakeFront is a building made of marble locally sourced from Rajnagar, brought in by
+                    bullock carts travelling 66 kms to Udaipur. Architecture influenced from Mughals, predominantly lead
+                    by Mewari techniques this heritage hotel in Udaipur has 65 luxurious rooms and 18 grand suites.
+                    Restored to its pristine glory, this spectacular palace became world renowned when the James Bond
+                    film ‘Octopussy’ was filmed at it. It was the secluded lair of the film’s eponymous Bond Girl.
+                    Its location on an island in the midst of a lake affords every room breathtaking views of the
+                    neighbouring City Palace, Aravalli Hills, Machla Magra Hills and Jag Mandir. The incomparable
+                    location provides the perfect backdrop for the exquisite cuisines at the elegant restaurants of
+                    LakeFront open only to resident guests. </p>
+                <p>Signature speciality restaurants at this palace serve a choice of cuisines. Neel Kamal for authentic
+                    Rajasthani and other dishes from India; and the
+                    seasonally open-air Bhairo for contemporary European delicacies. In the evening, indulge in
+                    signature martinis, cocktails and a grand collection of premium international spirits at the bar,
+                    Amrit Sagar. Continue being pampered as a royal at our J Wellness Circle in Udaipur, with carefully
+                    created treatments drawn from the ancient wellness heritage of India, and the fabled lifestyle and
+                    savoir vivre of Indian royalty. This 5 star palace hotel in Udaipur at Lake Pichola continues the
+                    tradition of grand soirees and formal levees which were hosted here by the royal family of Udaipur.
+                    Known as the Venice of the East, the city of Udaipur, with its elaborate palaces, serene lakes,
+                    exotic temples and resplendent gardens, has a lot to offer. Our concierge would be happy to assist
+                    you in making arrangements and planning a special tour of the city of lakes in one of our vintage
+                    cars. </p>
+            </div>
+            <div class="history_img">
+                <div class="img1">
+                    <img src="cq5dam.web.323.323 (1).jpeg" alt="img" style="width: 300px;height: 250px;">
+                    <br>
+                    <img src="cq5dam.web.323.323 (2).jpeg" alt="error" style="width: 300px;height: 250px;">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="service-body">
+        <h1>Our Services</h1>
+        <div class="services" id="services">
+            <div class="service-category">
+                <ul>
+                    <li data-description="Providing comfortable and clean rooms for guests to stay in.">Accommodation
+                    </li>
+                    <li data-description="Restaurants, cafes, and room service for meals and refreshments.">Dining</li>
+                    <li data-description="Regular cleaning and maintenance of rooms and common areas.">Housekeeping</li>
+                    <li
+                        data-description="Assistance with check-in, check-out, and information about local attractions.">
+                        Front Desk and Concierge</li>
+                </ul>
+            </div>
+            <div class="service-category">
+                <ul>
+                    <li data-description="Internet access for guests.">Wi-Fi</li>
+                    <li data-description="In-room features like TVs, minibars, and toiletries.">Room Amenities</li>
+                    <li data-description="Exercise facilities for guests to use.">Fitness Center</li>
+                    <li data-description="Access to pools for relaxation and exercise.">Swimming Pool</li>
+                </ul>
+            </div>
+            <div class="service-category">
+                <ul>
+                    <li data-description="Spa services, massages, and wellness treatments.">Spa and Wellness</li>
+                    <li data-description="Facilities for conferences, meetings, and special events.">Meeting and Event
+                        Spaces</li>
+                    <li data-description="Services like printing and faxing for business travelers.">Business Center
+                    </li>
+                    <li data-description="Parking services for guests.">Valet Parking</li>
+                    <li data-description="Transportation to and from airports or local attractions.">Shuttle Services
+                    </li>
+                </ul>
+            </div>
+            <div class="service-category">
+                <ul>
+                    <li data-description="Security measures to ensure guest safety.">24/7 Security</li>
+                    <li data-description="Facilities and services for guests with disabilities.">Accessibility Services
+                    </li>
+                    <li data-description="On-site shops selling souvenirs and essentials.">Gift Shops</li>
+                    <li data-description="Exchange services for international travelers.">Currency Exchange</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Auszeichnung" id="Auszeichnung">
+        <h2 style="font-style: italic;">
+            <center>Awards</center>
+        </h2>
+        <div class="Auszeichnungs">
+            <button id="scroll-left">&lt;</button>
+            <div class="awards scrolling-container">
+                <div class="Auszeichnung1">
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="Auszeichnung" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>Condenast Reader’s Choice awards - 2022</center>
+                    </h3>
+
+                    </p>
+
+                </div>
+                <div class="Auszeichnung2">
+
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>The Best Hotels in the World</center>
+                    </h3>
+
+                </div>
+                <div class="Auszeichnung3">
+
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>Condé Nast Traveller</center>
+                    </h3>
+
+                </div>
+                <div class="Auszeichnung4">
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>The Luxury Travel Bible</center>
+                    </h3>
+
+                </div>
+                <div class="Auszeichnung5">
+
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>TripAdvisor Travelers</center>
+                    </h3>
+
+                </div>
+                <div class="Auszeichnung6">
+
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>Readers' Choice</center>
+                    </h3>
+
+                </div>
+                <div class="Auszeichnung7">
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>Travel + Leisure</center>
+                    </h3>
+
+
+                </div>
+                <div class="Auszeichnung8">
+
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>Condé Nast Traveler USA</center>
+                    </h3>
+
+                </div>
+                <div class="Auszeichnung9" id="mot">
+
+                    <br>
+                    <img src="Auszeichnung.jpg" alt="award" style="width:300px ;">
+                    <p>
+                    <h3>
+                        <center>Ministry of Tourism India</center>
+                    </h3>
+
+                </div>
+
+            </div>
+            <button id="scroll-right">&gt;</button>
+        </div>
+    </div>
+    <footer>
+        <div class="ft">
+            <div class="footer" id="contact">
+                <div class="footer_aboutUs">
+                    <h3>About Us</h3>
+                    <p><a href="#history">Our Story</a></p>
+                    <p><a href="#award">Awards</a></p>
+                    <p><a href="index.html">Careers</a></p>
+                    <p><a href="#contact">Contact us</a></p>
+                    <p><a href="#mot">Ministry of Tourism</a></p>
+                </div>
+                <div class="footer_contactUs">
+                    <h3>Contact Us</h3>
+                    <p><a href="#">Address: 123 Main St.</a></p>
+                    <p><a href="#">Email: LakeFront@gmail.com</a></p>
+                    <p><a href="#">Phone: +91 98712345670</a></p>
+                </div>
+            </div>
+            <div class="copywrite">
+                <h3>copywrite &copy; by Soham Bedi</h3>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.scroll-to').addEventListener('click', function () {
+            document.querySelector('#services').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.querySelector('.scroll-to').addEventListener('click', function () {
+            document.querySelector('#history').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.querySelector('.scroll-to').addEventListener('click', function () {
+            document.querySelector('#Home').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.querySelector('.scroll-to').addEventListener('click', function () {
+            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.querySelector('.scroll-to').addEventListener('click', function () {
+            document.querySelector('#mot').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+    <script>
+        const scrollingContainer = document.querySelector('.scrolling-container');
+        const scrollLeftButton = document.getElementById('scroll-left');
+        const scrollRightButton = document.getElementById('scroll-right');
+
+        const scrollAmount = 960;
+
+        scrollLeftButton.addEventListener('click', function () {
+            scrollingContainer.scrollLeft -= scrollAmount;
+        });
+
+        scrollRightButton.addEventListener('click', function () {
+            scrollingContainer.scrollLeft += scrollAmount;
+        });
+    </script>
+
+</body>
+
+</html>

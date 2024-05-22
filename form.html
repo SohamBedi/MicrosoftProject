@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Form</title>
+    <link rel="stylesheet" href="form.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <link rel="stylesheet" href="1.css">
+    <header>
+        <div class="navigate">
+            <div class="hotel">
+                <a href="index.html" class="resort-name">The LakeFront</a>
+            </div>
+            <div class="navbar">
+                <a href="index.html">Contact</a>
+                <a href="index.html">Services</a>
+                <a href="index.html">About</a>
+                <a href="index.html">Home</a>
+                <a href="book.html" style=" color:rgb(255, 249, 182);">Book Now</a>
+            </div>
+        </div>
+    </header>
+    <h1>Reservation Form</h1>
+    <form action="confirmation.html" method="POST" onsubmit="return passFormData()">
+        <fieldset>
+            <legend>Contact Information</legend>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="first-name">First Name:</label>
+                    <input type="text" class="form-control" id="first-name" name="first-name" required placeholder="Your First Name">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" class="form-control" id="last-name" name="last-name" required placeholder="Your Last Name">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Your Email">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="num-guests">No of Guests:</label>
+                    <input type="number" class="form-control" id="num-guests" name="num-guests" required placeholder="Number of Guests">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Reservation Details</legend>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="check-in">Check-in Date:</label>
+                    <input type="date" class="form-control" id="check-in" name="check-in" required placeholder="Check-in Date">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="check-out">Check-out Date:</label>
+                    <input type="date" class="form-control" id="check-out" name="check-out" required placeholder="Check-out Date">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="room-type">Room Type:</label>
+                    <input type="text" class="form-control" id="room-type" name="room-type" required readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="price">Price:</label>
+                    <input type="text" class="form-control" id="price" name="price" required readonly>
+                </div>
+            </div>
+        </fieldset>
+
+        <label for="message">Additional Information:</label>
+        <textarea class="form-control" id="message" name="message" rows="4"></textarea><br>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <footer>
+        <div class="ft">
+            <div class="footer" id="contact">
+                <div class="footer_aboutUs">
+                    <h3>About Us</h3>
+                    <p><a href="#history">Our Story</a></p>
+                    <p><a href="#award">Awards</a></p>
+                    <p><a href="index.html">Careers</a></p>
+                    <p><a href="#contact">Contact us</a></p>
+                    <p><a href="#mot">Ministry of Tourism</a></p>
+                </div>
+                <div class="footer_contactUs">
+                    <h3>Contact Us</h3>
+                    <p><a href="#">Address: 123 Main St.</a></p>
+                    <p><a href="#">Email: LakeFront@gmail.com</a></p>
+                    <p><a href="#">Phone: +91 98712345670</a></p>
+                </div>
+            </div>
+            <div class="copywrite"><h3>copywrite &copy; by Soham Bedi</h3></div>
+        </div>
+    </footer>
+    <script>
+        window.addEventListener('load', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomType = urlParams.get('roomType');
+            const price = urlParams.get('price');
+
+            document.getElementById('room-type').value = roomType;
+            document.getElementById('price').value = price;
+        });
+    </script>
+    <script>
+        function passFormData() {
+            var firstName = document.getElementById("first-name").value;
+            var lastName = document.getElementById("last-name").value;
+            var email = document.getElementById("email").value;
+            var numGuests = document.getElementById("num-guests").value;
+            var checkIn = document.getElementById("check-in").value;
+            var checkOut = document.getElementById("check-out").value;
+            var roomType = document.getElementById("room-type").value;
+            var price = document.getElementById("price").value;
+            var message = document.getElementById("message").value;
+            
+            var params = `first-name=${firstName}&last-name=${lastName}&email=${email}&num-guests=${numGuests}&check-in=${checkIn}&check-out=${checkOut}&room-type=${roomType}&price=${price}&message=${message}`;
+            window.location.href = "confirmation.html?" + params;
+
+            return false;
+        }
+    </script>
+</body>
+</html>
+
